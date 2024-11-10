@@ -1,0 +1,222 @@
+@page
+@using Domain
+@using GameEngine
+@using Microsoft.VisualStudio.TextTemplating
+@using Mono.TextTemplating
+@model WebApp.Pages.Play.Index
+
+@{
+    ViewData["Title"] = "Play";
+}
+
+
+@foreach (var player in Model.Engine.State.Players)
+{
+    <p>@player.NickName</p>
+}
+
+@if (ViewData["WaitingForPlayers"] != null && (bool)ViewData["WaitingForPlayers"])
+{
+    <div>
+        <p>Waiting for all players to join the game.</p>
+    </div>
+}
+else
+{
+    <div>
+        <p>All Players have joined the game.</p>
+    </div>
+    @if (Model.HasDrawnCard)
+    {
+        
+    }
+    <h3>Play</h3>
+    <h3 class="text-center">Current active player: @Model.Engine.GetActivePlayer().NickName</h3>
+    <h3>@Model.Engine.State.ActivePlayerNo</h3>
+                                          
+    <h5>Reload page in <span id="reload-label">-</span></h5>
+                                                       
+    <h3>Cards in Deck:</h3>
+    <h>@Model.Engine.State.DrawDeck.Count</h>
+
+    <div class="top-discard-container">
+        <div class="top-discard">
+            <h3>Top Discard:</h3>
+            <div class="card num-@Model.Engine.State.DiscardPile.GetLastCardInDiscardPile()?.CardValue @Model.Engine.State.DiscardPile.GetLastCardInDiscardPile()?.CardColor">
+                <span class="inner">
+                    <span class="mark">@ConvertCardValueToNumber(@Model.Engine.State.DiscardPile.GetLastCardInDiscardPile()!.CardValue)</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="current-players">
+        <h3>Players currently playing</h3>
+        <table>
+            <tr>
+                <th>Player Names:</th>
+                <th>Cards in Hand:</th>
+            </tr>
+            @foreach (var player in Model.Engine.State.Players)
+            {
+                <tr>
+                    <td>@player.NickName</td>
+                    <td>@player.PlayerHand.Count</td>
+                </tr>
+            }
+        </table>
+    </div>
+    
+    <p>Active player Hand:</p>
+    <div class="active-player-hand">
+        Cards:
+        @for (int i = 0; i < Model.ClickedPlayer!.PlayerHand.Count; i++)
+        {
+            var card = Model.ClickedPlayer.PlayerHand[i];
+            <form id="playCardForm_@i" method="post" asp-page-handler="PlayCard">
+                <input type="hidden" name="GameId" value="@Model.GameId" />
+                <input type="hidden" name="PlayerId" value="@Model.PlayerId" />
+                <input type="hidden" name="CardIndex" value="@i" />
+                <a href="javascript:void(0);" class="card-container" onclick="playCard(@i)">
+                    <div class="card num-@card.CardValue @card.CardColor">
+                        <span class="inner">
+                            <span class="mark">@ConvertCardValueToNumber(card.CardValue)</span>
+                        </span>
+                    </div>
+                </a>
+            </form>
+        }
+    </div>
+    
+    <p>Player actions: </p>
+    <form method="post" asp-page-handler="DrawCard">
+         @Html.AntiForgeryToken()
+         <input type="hidden" name="GameId" value="@Model.GameId" />
+         <input type="hidden" name="PlayerId" value="@Model.PlayerId" />
+         <button id="drawCardButton" type="submit">Draw Card</button>
+    </form>
+        <form method="post" asp-page-handler="EndTurn">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="GameId" value="@Model.GameId" />
+            <input type="hidden" name="PlayerId" value="@Model.PlayerId" />
+            <button id="endTurnButton" type="submit">End Turn</button>
+    </form>
+
+}
+
+<p>Clicked Player: @Model.ClickedPlayer?.NickName</p>
+
+<!-- Display the clicked player's hand -->
+<ul>
+    @foreach (var card in Model.ClickedPlayer!.PlayerHand)
+    {
+        <li>@card.CardColor, @card.CardValue</li>
+    }
+</ul>
+
+
+<p id="drawnCardMessage"></p>
+
+@{
+    // Check if there is a TempData message from the server
+    var errorMessage = TempData["ErrorMessage"] as string;
+    var successMessage = TempData["SuccessMessage"] as string;
+}
+
+<p id="playCardMessage">@errorMessage</p>
+<p id="playCardMessage2">@successMessage</p>
+
+
+@* <h3>Active player: @Model.Engine.State.Players - @Model.Engine.GetActivePlayer().NickName</h3>  *@
+@*
+<h3>Active player: @Model.Engine.GetActivePlayer().NickName</h3> 
+*@
+
+
+@if (Model.Engine.GetActivePlayer().Id == Model.PlayerId)
+{
+    <div>Yes, Active</div>
+}
+
+@section Scripts
+{
+    <script>
+        let timerValue = 100
+        let timerLabel = document.querySelector("#reload-label")
+        setInterval(() => {
+            timerValue--
+            timerLabel.innerHTML = timerValue.toString()
+            if (timerValue <= 0) {
+                window.location.reload()
+                }
+        }, 1000)
+    </script>
+    
+    <script>
+    function playCard(index) {
+        document.getElementById('playCardForm_' + index).submit();    
+    }
+    </script>
+}
+
+
+@functions {
+
+    string ConvertCardValueToNumber(EValue cardValue)
+    {
+        switch (cardValue)
+        {
+            case EValue.One:
+                return "1";
+            case EValue.Two:
+                return "2";
+            case EValue.Three:
+                return "3";
+            case EValue.Four:
+                return "4";
+            case EValue.Five:
+                return "5";
+            case EValue.Six:
+                return "6";
+            case EValue.Seven:
+                return "7";
+            case EValue.Eight:
+                return "8";
+            case EValue.Nine:
+                return "9";
+            case EValue.Skip:
+                return "S";
+            case EValue.Reverse:
+                return "R";
+            case EValue.DrawTwo:
+                return "D2";
+            case EValue.DrawFour:
+                return "D4";
+            case EValue.Wild:
+                return "W";
+            default:
+                return "-"; // If no conversion is needed
+        }
+    }
+
+    private bool IsAiPlayerActive()
+    {
+        var activePlayerNo = Model.Engine.State.ActivePlayerNo;
+
+        // Check if activePlayerNo is a valid index
+        if (activePlayerNo >= 0 && activePlayerNo < Model.Engine.State.Players.Count)
+        {
+            var activePlayer = Model.Engine.State.Players[activePlayerNo];
+
+            // Check if activePlayer is not null and has PlayerType property
+            if (activePlayer != null && (activePlayer.PlayerType == EPlayerType.AI || activePlayer.PlayerType == EPlayerType.Human))
+            {
+                return activePlayer.PlayerType == EPlayerType.AI;
+            }
+        }
+        // Return false if any check fails
+        return false;
+    }
+
+}

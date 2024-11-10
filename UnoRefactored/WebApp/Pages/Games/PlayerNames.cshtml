@@ -1,0 +1,102 @@
+@page
+@using MenuSystem
+@using Domain.Database
+@model WebApp.Pages.Games.PlayerNamesModel
+
+@{
+    ViewData["Title"] = "Player names";
+}
+
+<h1>Player names</h1>
+
+@*@if (Model.GameType == "ai-ai")
+{
+    <p>No form is needed for AI vs AI game.</p>
+}*@
+
+@if (Model.GameType == String.Empty && Model.NumPlayers > 0)
+{
+    <form method="post" asp-page-handler="OnPost">
+        <input type="hidden" asp-for="Game.State" value="{}"/>
+        <div>
+            <p><strong>Number of Players:</strong> @Model.NumPlayers</p>
+            <p>Game mode is: @Model.GameModee</p>
+        </div>
+        
+        <div>
+            <h4>What would you like to be called?</h4>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="form-group">
+                <label asp-for="PlayerNames![0]">Your name:</label>
+                <input type="text" class="form-control" id="player" name="PlayerNames[0]" />
+            </div>
+
+            @for (int i = 1; i <= Model.NumPlayers - 2; i++)
+            {
+                <input type="hidden" name="PlayerNames[@i]" value="PlayerName@(i + 1)" />
+            }
+        </div>
+        
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary"/>
+        </div>
+    </form>
+}
+
+else if (Model.GameType == "human-ai" || Model.GameType == "human-human")
+{
+
+    <form method="post" asp-page-handler="OnPost">
+        <input type="hidden" asp-for="Game.State" value="{}"/>
+        <div>
+            <p><strong>Number of Players:</strong> @Model.NumPlayers</p>
+            <p><strong>Game Type:</strong> @Model.GameType</p>
+            <p><strong>Human Players:</strong> @Model.HumanNum</p>
+            <p><strong>AI Players:</strong> @Model.AiNum</p>
+            <p><strong>Game Mode:</strong> @Model.GameModee</p>
+        </div>
+
+        <div>
+            <h4>Enter Human player names</h4>
+            @for (int i = 1; i <= Model.HumanNum; i++)
+            {
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="HumanPlayerNames![i]">Player @i:</label>
+                    <input type="text" class="form-control" id="player@i" name="HumanPlayerNames[@(i - 1)]"/> </div>
+            }
+            
+        </div>
+        
+        <div>
+            @for (int i = 1; i <= Model.AiNum; i++)
+            {
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        
+                <div class="form-group">
+                    <label asp-for="AiPlayerNames![i]">AI Player @i:</label>
+                    <input type="hidden" class="form-control" id="aiPlayer@i" name="AiPlayerNames[@(i - 1)]" />
+                </div>
+            }
+        </div>
+        
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary"/>
+
+        </div>
+    </form>
+}
+
+
+<div>
+    <a asp-page="Back">Back to Create Game</a>
+</div>
+
+
+@section Scripts {
+    <script>
+        
+    </script>
+}

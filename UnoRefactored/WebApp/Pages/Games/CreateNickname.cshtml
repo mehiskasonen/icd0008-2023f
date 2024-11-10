@@ -1,0 +1,20 @@
+@page "{playerId:guid}/{gameId:guid}"
+@model WebApp.Pages.Games.CreateNicknameModel
+
+@{
+    ViewData["CreateNickname"] = "CreateNickname";
+}
+
+<h1>Create Your Nickname</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label asp-for="Nickname"></label>
+        <input asp-for="Nickname" class="form-control" />
+    </div>
+    <input type="submit" value="Submit" class="btn btn-primary" />
+</form>
+
+<div>
+    <a asp-page="/Games/Index">Back to Games</a>
+</div>

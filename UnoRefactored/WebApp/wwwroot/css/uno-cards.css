@@ -1,0 +1,254 @@
+
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:900);
+
+.card {
+    width:116px;height:178px;float:left;
+    background:#fff;
+    border-radius:5px;
+    display:table;
+    box-sizing:border-box;
+    padding:5px;
+    margin:10px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size:100px;
+    text-shadow:
+            1px  1px 0 #000000,
+            -1px -1px 0 #000000,
+            -1px  1px 0 #000000,
+            1px -1px 0 #000000,
+            1px  0   0 #000000,
+            -1px  0   0 #000000,
+            0   -1px 0 #000000,
+            0    1px 0 #000000,
+            4px  4px 0 #000000;
+    box-shadow:0 0 10px #aaaaaa;
+    text-align:center;
+    position:relative;
+}
+.card .inner{
+    display:table-cell;
+    vertical-align:middle;
+    border-radius:5px;
+    overflow:hidden;
+}
+
+.card .mark {
+    display:inline-block;
+    vertical-align:middle;
+    background:#ffffff;
+    margin:auto;
+    padding:0 26px;
+    border-radius:100px 60px / 120px 60px;
+    line-height:1.4;
+}
+
+.card:before,
+.card:after{
+    display:inline-block;
+    position:absolute;
+    line-height:0;
+    font-size:20px;
+    color:#ffffff;
+    text-shadow:
+            1px  1px 0 #000000,
+            -1px -1px 0 #000000,
+            -1px  1px 0 #000000,
+            1px -1px 0 #000000,
+            1px  0   0 #000000,
+            -1px  0   0 #000000,
+            0   -1px 0 #000000,
+            0    1px 0 #000000,
+            2px  2px 0 #000000;
+}
+
+.card:before{
+    top:15px;
+    left:10px;
+}
+.card:after{
+    bottom:15px;
+    right:10px;
+    -webkit-transform:rotate(180deg)
+}
+
+.card.Blue{
+    color:#0063B3;
+}
+
+.card.Blue .inner{
+    background:#0063B3;
+}
+
+.card.Green{
+    color:#18A849;
+}
+
+.card.Green .inner{
+    background:#18A849;
+}
+
+.card.Red{
+    color:#C72A18;
+}
+
+.card.Red .inner{
+    background:#C72A18;
+}
+
+.card.Yellow{
+    color:#E6CA1E;
+}
+
+.card.Yellow .inner{
+    background:#E6CA1E;
+}
+
+.card.num-Zero:before,
+.card.num-Zero:after{
+    content:"0";
+}
+
+.card.num-One:before,
+.card.num-One:after{
+    content:"1";
+}
+
+.card.num-Two:before,
+.card.num-Two:after{
+    content:"2";
+}
+
+.card.num-Three:before,
+.card.num-Three:after{
+    content:"3";
+}
+
+.card.num-Four:before,
+.card.num-Four:after{
+    content:"4";
+}
+
+.card.num-Five:before,
+.card.num-Five:after{
+    content:"5";
+}
+
+.card.num-Six:before,
+.card.num-Six:after{
+    content:"6";
+}
+
+.card.num-Seven:before,
+.card.num-Seven:after{
+    content:"7";
+}
+
+.card.num-Eight:before,
+.card.num-Eight:after{
+    content:"8";
+}
+
+.card.num-Nine:before,
+.card.num-Nine:after{
+    content:"9";
+}
+
+.card.Skip:before,
+.card.Skip:after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 20%;
+    background-color: #0063B3;
+    position: relative;
+    top: 40%;
+    transform: rotate(-45deg);
+}
+
+.card.num-Six .mark:after,
+.card.num-Nine .mark:after{
+    display:block;
+    content:"";
+    position:relative;
+    top:-25px;
+    left:5px;
+    width:80%;
+    border:1px solid #000000;
+    height:4px;
+    box-shadow:1px 1px 0 #000000;
+}
+.card.num-Six.Blue .mark:after,
+.card.num-Nine.Blue .mark:after{
+    background:#0063B3;
+}
+.card.num-Six.Green .mark:after,
+.card.num-Nine.Green .mark:after{
+    background:#18A849;
+}
+.card.num-Six.Red .mark:after,
+.card.num-Nine.Red .mark:after{
+    background:#C72A18;
+}
+.card.num-Six.Yellow .mark:after,
+.card.num-Nine.Yellow .mark:after{
+    background:#E6CA1F;
+}
+
+.card.special {
+    background: #333;
+}
+
+.card.special .inner {
+    background: #333;
+}
+
+.card.special .mark {
+    color: #fff;
+}
+
+.card .content .Skip {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border: 4px solid #3e9e32; /* Default color for green */
+    border-radius: 50%;
+    margin-top: 20%;
+}
+
+.card .content .Skip:before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 20%;
+    background-color: #3e9e32; /* Default color for green */
+    position: relative;
+    top: 40%;
+    transform: rotate(-45deg);
+}
+
+
+/* Existing styles remain unchanged */
+
+.card.Blue .Skip:before,
+.card.Blue .Skip:after {
+    content: "Skip";
+    color: #0063B3; /* Adjust the color as needed */
+}
+
+.card.Green .Skip:before,
+.card.Green .Skip:after {
+    content: "Skip";
+    color: #18A849;
+}
+
+.card.Red .Skip:before,
+.card.Red .Skip:after {
+    content: "Skip";
+    color: #C72A18;
+}
+
+.card.Yellow .Skip:before,
+.card.Yellow .Skip:after {
+    content: "Skip";
+    color: #E6CA1E;
+}

@@ -1,0 +1,198 @@
+@page
+@using Domain
+@model WebApp.Pages.Games.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Game</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" id="gameForm">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            @*<div class="form-group">
+                <label asp-for="Game.CreatedAtDt" class="control-label"></label>
+                <input asp-for="Game.CreatedAtDt" class="form-control" />
+                <span asp-validation-for="Game.CreatedAtDt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.UpdatedAtDt" class="control-label"></label>
+                <input asp-for="Game.UpdatedAtDt" class="form-control" />
+                <span asp-validation-for="Game.UpdatedAtDt" class="text-danger"></span>
+            </div>*@
+            @*<div class="form-group">
+                <label asp-for="Game.State" class="control-label">Enter Game Name:</label>
+                <input asp-for="Game.State" class="form-control" />
+                <span asp-validation-for="Game.State" class="text-danger"></span>
+            </div>*@
+            
+            <input type="button" id="multiplayerBtn" value="Multiplayer">
+            <input type="button" id="singleplayerBtn" value="Singleplayer">
+            
+            
+            <div id="numPlayersDiv" style="display: none;">
+                <label for="numPlayers">Choose Number of Players:</label>
+                <select id="numPlayers">
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+            </div>
+            <div id="gameTypeDiv" style="display: none;">
+                @* <label for="gameType">Choose Game Type:</label> *@
+                <label for="gameType">Choose Game Type:</label>
+                <select id="gameType">
+                    <option value=""></option>
+                    <option value="human-human">Human vs Human</option>
+                    <option value="human-ai">Human vs AI</option>
+                    <option value="ai-ai">AI vs AI</option>
+                </select>
+            </div>
+            <div id="humanNumDiv" style="display: none;">
+                <label for="HumanNum">Choose number of Human players:</label>
+                <select id="HumanNum"></select>
+            </div>
+            <div id="aiNumDiv" style="display: none;">
+                <label for="AiNum">Choose number of Ai players</label>
+                <select id="AiNum">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+            </div>
+            
+            <div id="inputGroups"></div>
+            <div id="inputGroupsHuman"></div>
+            <div id="inputGroupsAi"></div>
+            
+            <div class="form-group">
+                <input type="button" value="Next" class="btn btn-primary" onclick="navigateToSummaryPage()" />
+            </div>
+            
+            
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script>
+            document.getElementById('multiplayerBtn').addEventListener('click', function() {
+                document.getElementById('numPlayersDiv').style.display = 'block';
+                document.getElementById('gameTypeDiv').style.display = 'none';
+                document.getElementById('humanNumDiv').style.display = 'none';                    
+                document.getElementById('aiNumDiv').style.display = 'none';
+            });
+            
+            document.getElementById('singleplayerBtn').addEventListener('click', function() {
+                document.getElementById('gameTypeDiv').style.display = 'block';
+                document.getElementById('numPlayersDiv').style.display = 'none';
+
+            });
+            
+            document.getElementById('gameType').addEventListener('change', function() {
+                var gameType = document.getElementById('gameType').value;
+
+                if (gameType === 'human-human') {
+                    document.getElementById('humanNumDiv').style.display = 'block';
+                    document.getElementById('aiNumDiv').style.display = 'none';
+                } else if (gameType === 'human-ai') {
+                    document.getElementById('humanNumDiv').style.display = 'block';
+                    document.getElementById('aiNumDiv').style.display = 'block';
+                } else if (gameType === 'ai-ai') {
+                    document.getElementById('aiNumDiv').style.display = 'block';
+                    document.getElementById('humanNumDiv').style.display = 'none';
+                    } else {
+                    document.getElementById('humanNumDiv').style.display = 'none';
+                    document.getElementById('aiNumDiv').style.display = 'none';
+                }
+            });
+            
+            document.getElementById('gameForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                createInputGroups();
+                // Collect the form data and handle it according to your needs.
+                var numPlayers = document.getElementById('numPlayers').value;
+                var gameType = document.getElementById('gameType').value;
+                var humanNum = document.getElementById('HumanNum').value;
+            
+                console.log('Number of Players:', numPlayers);
+                console.log('Game Type:', gameType);
+                console.log('Number of Human Players:', humanNum);
+            });
+            
+            // Add options to humanNum select element
+            var humanNumSelect = document.getElementById('HumanNum');
+            for (var i = 1; i <= 7; i++) {
+                var option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                humanNumSelect.appendChild(option);
+            }
+            
+            // Add event listener to aiNum select element
+            document.getElementById('AiNum').addEventListener('change', function() {
+                var maxHumanNum = 7 - parseInt(document.getElementById('AiNum').value);
+                var humanNumSelect = document.getElementById('HumanNum');
+            
+                // Remove existing options
+                while (humanNumSelect.firstChild) {
+                    humanNumSelect.removeChild(humanNumSelect.firstChild);
+                }
+            
+                // Add updated options
+                for (var i = 1; i <= maxHumanNum; i++) {
+                    var option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = i;
+                    humanNumSelect.appendChild(option);
+                }
+            });
+            
+            function navigateToSummaryPage() {
+                // Collect form data
+                var formData = {
+                    numPlayers: document.getElementById('numPlayers').value,
+                    gameType: document.getElementById('gameType').value,
+                    gameMode: document.getElementById('numPlayersDiv').style.display === 'block' ? 'Multiplayer' : 'Singleplayer',
+                    humanNum: document.getElementById('HumanNum').value,
+                    aiNum: document.getElementById('AiNum').value
+                };
+    
+                // Convert form data to JSON and encode it for URL
+                var formDataJson = JSON.stringify(formData);
+                
+                    // Create a hidden input field to store the JSON data
+                    var hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'data';
+                    hiddenInput.value = formDataJson;
+                            
+                    // Append the hidden input to the form
+                    document.getElementById('gameForm').appendChild(hiddenInput);
+                    document.getElementById('gameForm').submit();
+                            
+                var encodedData = encodeURIComponent(formDataJson);
+    
+                // Navigate to the summary page with the encoded form data
+                window.location.href = '/Games/PlayerNames?data=' + encodedData;
+            }
+            
+        </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
